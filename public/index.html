@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mein SoundCloud</title>
+<title>Mein SoundCloud · Musik für dich</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -776,6 +776,67 @@ body,button,input{font-family:"Figtree",-apple-system,BlinkMacSystemFont,"Inter"
   .full-extras .vi,#f-vol{display:none}
   #np .ic svg{width:26px;height:26px}
 }
+/* ============ FINAL POLISH / FIXES ============ */
+:root{--acc:#1ed760;--acc-hi:#35e879;--panel-elevated:#1b1b1b;--focus-ring:0 0 0 3px rgba(30,215,96,.22)}
+html{background:#000}
+body{letter-spacing:-.005em}
+button,a,.tr,.tile,.card{ -webkit-tap-highlight-color:transparent }
+button:focus-visible,input:focus-visible,a:focus-visible{outline:0;box-shadow:var(--focus-ring)}
+#view{padding-bottom:max(52px,env(safe-area-inset-bottom))}
+main{isolation:isolate}
+main::after{content:'';position:fixed;pointer-events:none;inset:0;z-index:-1;background:radial-gradient(55% 26% at 50% 0%,rgba(30,215,96,.09),transparent 76%)}
+.card{position:relative;overflow:hidden}
+.card .im{border-radius:10px}
+.card .t{letter-spacing:-.012em}
+.tr{min-height:64px}
+.tr:active,.tile:active,.chip:active,.btn:active{transform:scale(.985)}
+.hero .btns .btn.g{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.22)}
+.hero .btns .btn.g:hover{background:rgba(255,255,255,.15)}
+#bar{backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+#bar::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.38);pointer-events:none;z-index:0}
+#bar>*{position:relative;z-index:1}
+#bar #mp{z-index:3}
+#toast{max-width:min(90vw,420px);text-align:center}
+.msg{padding:56px 20px}
+.err{color:#ff7676}
+@media(max-width:900px){
+  body{background:#121212}
+  main{background-image:linear-gradient(180deg,rgba(30,215,96,.22),#121212 300px);}
+  main::after{display:none}
+  #view{padding-left:16px;padding-right:16px;padding-bottom:calc(166px + env(safe-area-inset-bottom))}
+  #mtop{box-shadow:0 8px 24px rgba(0,0,0,.08)}
+  #mtop h1{font-size:25px;letter-spacing:-.04em}
+  .mchips{padding-bottom:2px}
+  .mchips .chip,.lch .chip{border:1px solid rgba(255,255,255,.06);font-weight:700}
+  .gtiles a{height:92px;box-shadow:inset 0 -30px 50px rgba(0,0,0,.08)}
+  .tiles{gap:10px}
+  .tile{border-radius:7px;background:rgba(255,255,255,.09)}
+  .tile img,.tile .ph{border-radius:0}
+  .grid{gap:22px 14px}
+  .card .im{box-shadow:0 12px 26px rgba(0,0,0,.35)}
+  .card .t{font-size:14px;margin-top:9px}
+  .card .a{font-size:12px;margin-top:3px}
+  .tr{gap:12px;min-height:60px}
+  .tr img,.tr .ph{width:52px;height:52px;border-radius:5px}
+  .tr .t{font-weight:650}
+  .hero{padding-top:16px}
+  .hero img,.hero .ph{box-shadow:0 18px 44px rgba(0,0,0,.48)}
+  #bar{bottom:calc(64px + env(safe-area-inset-bottom));border-radius:10px}
+  #tabbar{height:calc(64px + env(safe-area-inset-bottom));}
+  #tabbar a,#tabbar button{font-weight:600}
+  #qp{border:1px solid rgba(255,255,255,.12);background:rgba(28,28,28,.96)}
+}
+@media(max-width:420px){
+  #view{padding-left:14px;padding-right:14px}
+  #mtop{padding-left:14px;padding-right:14px}
+  .hero img,.hero .ph{width:min(68vw,250px);height:min(68vw,250px)}
+  .grid{gap:20px 12px}
+  #np .np-text{max-width:145px}
+  #np .t{font-size:12.5px}
+}
+@media(prefers-reduced-motion:reduce){
+  #bar::after{display:none}
+}
 </style>
 </head>
 <body>
@@ -1086,7 +1147,7 @@ addEventListener('hashchange',()=>{
   route();
 });
 const goSearch=q=>{q=q.trim();if(!q)return;
-  if(/^https?:\/\//i.test(q)){const s=new URL(q).pathname.split('/').filter(Boolean);
+  if(/^https?:\/\//i.test(q)){let u;try{u=new URL(q)}catch{return toast('Der Link ist ungültig')};const s=u.pathname.split('/').filter(Boolean);
     location.hash=s[1]==='sets'?'#/playlist/'+enc(q):s.length===1?'#/profile/'+enc(q):'#/track/'+enc(q)}
   else if(q[0]==='@')location.hash='#/profile/'+enc(q.slice(1));
   else location.hash='#/search/'+enc(q)+'/tracks'};
@@ -1280,10 +1341,10 @@ function trackMenu(t,x,y){const my=view.dataset.list;
   ['Zur Warteschlange',()=>{Q.push(t);if(!cur)playAt(0);toast('Zur Warteschlange hinzugefügt');syncUI()}],
   ['Zu Playlist hinzufügen…',()=>addToList(t,x,y)],
   ...(t.artist?[['Zum Künstler',()=>location.hash=pLink(t.artist)]]:[]),
-  ['Auf SoundCloud öffnen',()=>open(t.permalinkUrl,'_blank','noopener')],
+  ['Auf SoundCloud öffnen',()=>window.open(t.permalinkUrl,'_blank','noopener,noreferrer')],
   ...(my?[['Aus dieser Playlist entfernen',()=>{S.lists[my]=S.lists[my].filter(x=>x.id!=t.id);save();vMylist(my)}]]:[])])}
 const ACT={
-  like:b=>toggleLike(TR[b.closest('[data-id]')?.dataset.id]),
+  like:b=>{const id=b.closest('[data-id]')?.dataset.id;toggleLike(TR[id]||Q.find(t=>String(t.id)===String(id)));},
   likecur:()=>toggleLike(cur),
   more:(b,e)=>{const t=TR[b.closest('[data-id]')?.dataset.id];if(t){const r=b.getBoundingClientRect();trackMenu(t,r.left,r.bottom)}},
   playall:b=>playQueue(LISTS[b.dataset.k]||[],0),
