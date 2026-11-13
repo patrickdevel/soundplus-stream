@@ -23,10 +23,12 @@
   --acc-hi:#ff7a3d;
   --acc-grad:linear-gradient(135deg,#ff8a3d,#ff3d00);
   --acc-glow:0 8px 32px -6px rgba(255,80,20,.55);
+  --ver:#ff5a1f;
   --radius:14px;
   --radius-sm:10px;
   --pill:999px;
   --shadow-panel:inset 0 1px 0 rgba(255,255,255,.04),0 8px 32px rgba(0,0,0,.45);
+  --fp-veil:linear-gradient(180deg,rgba(0,0,0,.58),rgba(0,0,0,.9));
   --ease:cubic-bezier(.4,0,.2,1);
 }
 @media(prefers-color-scheme:light){
@@ -44,6 +46,7 @@
     --fg-2:#525252;
     --mute:#8a8a8a;
     --shadow-panel:inset 0 1px 0 rgba(255,255,255,.6),0 8px 32px rgba(0,0,0,.08);
+    --fp-veil:linear-gradient(180deg,rgba(255,255,255,.8),rgba(255,255,255,.95));
   }
 }
 
@@ -75,6 +78,14 @@ img{display:block}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:99px;border:2px solid transparent;background-clip:content-box}
 ::-webkit-scrollbar-thumb:hover{background:var(--fg-2);background-clip:content-box}
+
+/* ============ VERIFIED BADGE ============ */
+.vb{
+  display:inline-block;width:1em;height:1em;
+  vertical-align:-.14em;margin-left:.3em;
+  color:var(--ver);flex:none;
+  filter:drop-shadow(0 0 6px rgba(255,90,31,.35));
+}
 
 /* ============ LAYOUT ============ */
 #app{
@@ -329,6 +340,7 @@ h2:first-child{margin-top:0}
 .hero .sub{margin:6px 0 0;font-size:13.5px;color:rgba(255,255,255,.78)}
 .hero .sub a{color:#fff;text-decoration:underline;text-decoration-color:rgba(255,255,255,.35);text-underline-offset:2px}
 .hero .sub a:hover{color:var(--acc-hi)}
+.hero .vb{filter:drop-shadow(0 0 10px rgba(255,90,31,.55))}
 
 /* ============ BUTTONS ============ */
 .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
@@ -387,7 +399,8 @@ h2:first-child{margin-top:0}
 }
 #bar .c button:hover{background:var(--surface-2);color:var(--fg)}
 #bar .c button.on{color:var(--acc)}
-#bar .c button#rp.one::after{
+#bar .c button.one::after,
+#fp .ic.one::after{
   content:'1';position:absolute;top:3px;right:3px;
   font-size:9px;font-weight:700;line-height:1;
   color:var(--acc);
@@ -409,7 +422,7 @@ h2:first-child{margin-top:0}
   transition:background .15s;
 }
 #np:hover{background:var(--surface)}
-#np img{width:44px;height:44px;object-fit:cover;border-radius:6px;background:var(--surface-2);flex:none}
+#np img{width:44px;height:44px;object-fit:cover;border-radius:6px;background:var(--surface-2);flex:none;cursor:pointer}
 #np div{min-width:0;display:flex;flex-direction:column}
 #np .t{
   font-size:13px;font-weight:600;color:var(--fg);
@@ -431,12 +444,13 @@ h2:first-child{margin-top:0}
 }
 #qp.open{display:block;animation:slideIn .25s var(--ease)}
 @keyframes slideIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
-#qp h3{
+#qp h3,#fpqlist h3{
   margin:0 0 16px;font-size:15px;font-weight:600;letter-spacing:-.01em;
   display:flex;justify-content:space-between;align-items:center;
 }
-#qp .tr img,#qp .tr .ph{width:40px;height:40px}
-#qp .a{font-size:12px;color:var(--mute)}
+#qp .tr img,#qp .tr .ph,
+#fpqlist .tr img,#fpqlist .tr .ph{width:40px;height:40px}
+#qp .a,#fpqlist .a{font-size:12px;color:var(--mute)}
 .mini-btn{
   font-size:12px;font-weight:500;color:var(--fg-2);
   padding:5px 12px;border-radius:var(--pill);
@@ -444,6 +458,103 @@ h2:first-child{margin-top:0}
   transition:background .15s,color .15s;
 }
 .mini-btn:hover{background:var(--surface-2);color:var(--fg)}
+
+/* ============ FULL PLAYER ============ */
+#fp{
+  position:fixed;inset:0;z-index:45;
+  display:none;background:var(--bg);color:var(--fg);
+  overflow:hidden;
+}
+#fp.open{display:block;animation:fpIn .32s var(--ease)}
+@keyframes fpIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+#fpb{
+  position:absolute;inset:-25%;z-index:0;
+  background-position:center;background-size:cover;
+  filter:blur(90px) saturate(1.7);
+  opacity:.55;pointer-events:none;
+}
+#fp::after{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:var(--fp-veil);
+}
+.fp-wrap{
+  position:relative;z-index:1;
+  height:100%;max-width:1400px;margin:0 auto;
+  display:flex;flex-direction:column;
+  padding:14px clamp(16px,4vw,44px) 26px;
+}
+.fp-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none}
+.fp-top .ic{width:40px;height:40px;border-radius:50%}
+.fp-hint{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);font-weight:700}
+.fp-body{
+  flex:1;min-height:0;
+  display:flex;align-items:center;justify-content:center;
+  gap:clamp(24px,5vw,64px);padding:10px 0;
+}
+.fp-art{flex:none;display:flex;align-items:center;justify-content:center}
+.fp-art img{
+  width:clamp(180px,42vh,400px);height:clamp(180px,42vh,400px);
+  object-fit:cover;border-radius:16px;
+  background:var(--surface-2);
+  box-shadow:0 30px 80px -24px rgba(0,0,0,.85);
+}
+.fp-side{flex:1;min-width:0;max-width:560px;display:flex;flex-direction:column;gap:10px}
+.fp-meta{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fp-title{
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;word-break:break-word;
+  font-size:clamp(20px,2.4vw,30px);font-weight:800;
+  letter-spacing:-.03em;line-height:1.18;color:var(--fg);
+}
+.fp-artist{
+  display:inline-flex;align-items:center;
+  font-size:14.5px;font-weight:500;color:var(--fg-2);
+  width:fit-content;max-width:100%;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+}
+#fpwv{width:100%;height:72px;display:block;cursor:pointer;border-radius:8px}
+.fp-times{
+  display:flex;justify-content:space-between;
+  font-size:12px;color:var(--mute);
+  font-variant-numeric:tabular-nums;margin-top:-6px;
+}
+.fp-controls{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px}
+.fp-controls .ic{width:44px;height:44px;border-radius:50%}
+.fp-controls .ic.on{color:var(--acc)}
+.fp-play{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--fg);color:var(--bg);
+  display:inline-flex;align-items:center;justify-content:center;
+  margin:0 12px;
+  transition:transform .2s var(--ease),background .2s;
+}
+.fp-play:hover{transform:scale(1.06);background:var(--fg);color:var(--bg)}
+.fp-play svg{width:26px;height:26px}
+.fp-row{display:flex;align-items:center;gap:14px;margin-top:6px;flex-wrap:wrap}
+#fp-vol{width:120px;max-width:40vw;accent-color:var(--acc);cursor:pointer;height:4px}
+.fp-queue{
+  position:absolute;top:0;right:0;bottom:0;z-index:3;
+  width:min(360px,100%);display:none;
+  padding:20px;overflow-y:auto;
+  background:var(--glass);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+          backdrop-filter:blur(24px) saturate(180%);
+  border-left:1px solid var(--border-2);
+  box-shadow:-20px 0 60px rgba(0,0,0,.4);
+}
+#fp.showq .fp-queue{display:block;animation:slideIn .25s var(--ease)}
+
+@media(max-width:820px){
+  .fp-body{
+    flex-direction:column;justify-content:flex-start;
+    gap:16px;overflow-y:auto;padding:0;
+  }
+  .fp-art img{width:min(58vw,220px);height:min(58vw,220px)}
+  .fp-side{width:100%;max-width:none;padding-bottom:8px}
+  #fpwv{height:56px}
+  .fp-play{width:56px;height:56px}
+  .fp-controls .ic{width:38px;height:38px}
+}
 
 /* ============ CONTEXT MENU ============ */
 #menu{
@@ -578,9 +689,53 @@ h2:first-child{margin-top:0}
   <canvas id="wv"></canvas>
   <span class="tm" id="du">0:00</span>
   <input type="range" id="vol" min="0" max="1" step="0.01" aria-label="Lautstärke">
-  <div id="np"><img id="ni" alt=""><div><a class="t" id="nt" href="#">Nichts spielt</a><a class="a" id="na" href="#"></a></div></div>
+  <div id="np"><img id="ni" alt="" title="Vollbild-Player öffnen"><div><a class="t" id="nt" href="#">Nichts spielt</a><a class="a" id="na" href="#"></a></div></div>
   <button class="ic" id="nl" data-act="likecur" title="Gefällt mir"></button>
+  <button class="ic" id="expand" title="Vollbild-Player" aria-label="Vollbild-Player öffnen">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
 </div>
+
+<!-- ============ FULL PLAYER ============ -->
+<div id="fp" aria-hidden="true" role="dialog" aria-label="Vollbild-Player">
+  <div id="fpb"></div>
+  <div class="fp-wrap">
+    <div class="fp-top">
+      <button class="ic" id="fp-close" title="Player schließen" aria-label="Player schließen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="fp-hint">Wiedergabe</div>
+      <button class="ic" id="fp-queue" title="Warteschlange" aria-label="Warteschlange">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      </button>
+    </div>
+    <div class="fp-body">
+      <div class="fp-art"><img id="fp-img" alt=""></div>
+      <div class="fp-side">
+        <div class="fp-meta">
+          <a class="fp-title" id="fp-title" href="#">Nichts spielt</a>
+          <a class="fp-artist" id="fp-artist" href="#"></a>
+        </div>
+        <canvas id="fpwv"></canvas>
+        <div class="fp-times"><span id="fp-cur">0:00</span><span id="fp-dur">0:00</span></div>
+        <div class="fp-controls">
+          <button class="ic" id="fp-sh" title="Zufall"></button>
+          <button class="ic" id="fp-pv" title="Zurück"></button>
+          <button class="fp-play" id="fp-pp" title="Abspielen"></button>
+          <button class="ic" id="fp-nx" title="Weiter"></button>
+          <button class="ic" id="fp-rp" title="Wiederholen"></button>
+        </div>
+        <div class="fp-row">
+          <button class="ic" id="fp-like" data-act="likecur" title="Gefällt mir"></button>
+          <input type="range" id="fp-vol" min="0" max="1" step="0.01" aria-label="Lautstärke">
+          <a class="mini-btn" id="fp-open" href="#" target="_blank" rel="noopener">Auf SoundCloud</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="fp-queue"><div id="fpqlist"></div></aside>
+</div>
+
 <audio id="au"></audio>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
 <script>
@@ -595,8 +750,12 @@ const I={
   heart:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
   more:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>',
   close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
-  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>'
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>'
 };
+
+/* Echtes Verified-Badge (Material "verified", Check als Aussparung) */
+const V='<svg class="vb" viewBox="0 0 24 24" role="img" aria-label="Verifiziert"><path fill="currentColor" fill-rule="evenodd" d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"/></svg>';
 
 const $=(s,e=document)=>e.querySelector(s), au=$('#au'), view=$('#view'), mainEl=$('#main');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -611,25 +770,26 @@ const api=async(p,q)=>{
   if(r.status===401){const k=prompt('Zugriffscode:');if(k){sessionStorage.setItem('key',k);return api(p,q)}}
   const d=await r.json().catch(()=>({error:'Ungültige Antwort'}));if(!r.ok)throw new Error(d.error||'Fehler');return d};
 const TR={}, LISTS={};
-const slim=t=>({id:t.id,title:t.title,permalinkUrl:t.permalinkUrl,duration:t.duration,artworkUrl:t.artworkUrl,artist:t.artist?{id:t.artist.id,username:t.artist.username,profileUrl:t.artist.profileUrl}:null,stats:{plays:t.stats?.plays}});
+const slim=t=>({id:t.id,title:t.title,permalinkUrl:t.permalinkUrl,duration:t.duration,artworkUrl:t.artworkUrl,artist:t.artist?{id:t.artist.id,username:t.artist.username,profileUrl:t.artist.profileUrl,verified:!!t.artist.verified}:null,stats:{plays:t.stats?.plays}});
 const reg=l=>l.filter(Boolean).map(t=>(TR[t.id]=Object.assign(TR[t.id]||{},t)));
 const liked=id=>S.likes.some(t=>t.id==id);
 const img=(u,c='')=>u?`<img class="${c}" src="${esc(u)}" alt="" loading="lazy">`:`<div class="ph ${c}"></div>`;
 const pLink=a=>a?`#/profile/${enc(a.profileUrl||a.username)}`:'#';
+const aName=a=>a?esc(a.username||'')+(a.verified?V:''):'';
 
 /* ---------- Listen ---------- */
 function rows(list,k){list=reg(list);LISTS[k]=list;
   return list.length?list.map((t,i)=>`<div class="tr${cur&&cur.id==t.id?' on':''}" data-k="${k}" data-i="${i}" data-id="${t.id}">${img(t.artworkUrl)}
-  <div class="m"><a class="t" href="#/track/${enc(t.permalinkUrl)}">${esc(t.title)}</a><a class="a" href="${pLink(t.artist)}">${esc(t.artist?.username||'')}</a></div>
+  <div class="m"><a class="t" href="#/track/${enc(t.permalinkUrl)}">${esc(t.title)}</a><a class="a" href="${pLink(t.artist)}">${aName(t.artist)}</a></div>
   <span class="pl" title="Wiedergaben">${t.stats?.plays!=null?num(t.stats.plays):''}</span>
   <button class="ic${liked(t.id)?' liked':''}" data-act="like" title="Gefällt mir">${I.heart}</button>
   <button class="ic" data-act="more" title="Mehr">${I.more}</button>
   <span class="du">${tm(t.duration)}</span></div>`).join(''):'<div class="msg">Hier ist noch nichts.</div>'}
 function cards(list,k){list=reg(list);LISTS[k]=list;
   return `<div class="grid">${list.map((t,i)=>`<div class="card" data-k="${k}" data-i="${i}" data-id="${t.id}">
-  <div class="im">${img(t.artworkUrl)}<span class="go">${I.play}</span></div><a class="t" href="#/track/${enc(t.permalinkUrl)}">${esc(t.title)}</a><a class="a" href="${pLink(t.artist)}">${esc(t.artist?.username||'')}</a></div>`).join('')}</div>`}
+  <div class="im">${img(t.artworkUrl)}<span class="go">${I.play}</span></div><a class="t" href="#/track/${enc(t.permalinkUrl)}">${esc(t.title)}</a><a class="a" href="${pLink(t.artist)}">${aName(t.artist)}</a></div>`).join('')}</div>`}
 const listCards=l=>`<div class="grid">${l.map(p=>`<a class="card" href="#/playlist/${enc(p.permalinkUrl)}"><div class="im">${img(p.artworkUrl)}</div><span class="t">${esc(p.title)}</span><span class="a">${esc(p.artist?.username||'')} · ${p.trackCount} Tracks</span></a>`).join('')}</div>`;
-const userCards=l=>`<div class="grid">${l.map(u=>`<a class="card pr" href="#/profile/${enc(u.permalinkUrl)}"><div class="im">${img(u.avatarUrl)}</div><span class="t">${esc(u.username)}${u.verified?' ✔':''}</span><span class="a">${num(u.followers)} Follower</span></a>`).join('')}</div>`;
+const userCards=l=>`<div class="grid">${l.map(u=>`<a class="card pr" href="#/profile/${enc(u.permalinkUrl)}"><div class="im">${img(u.avatarUrl)}</div><span class="t">${esc(u.username)}${u.verified?V:''}</span><span class="a">${num(u.followers)} Follower</span></a>`).join('')}</div>`;
 const tabs=(base,items,on)=>`<div class="tabs">${items.map(([k,l])=>`<a href="#/${base}/${k}" class="${on===k?'on':''}">${l}</a>`).join('')}</div>`;
 const playBtns=k=>`<div class="btns"><button class="btn" data-act="playall" data-k="${k}">${I.play}<span>Abspielen</span></button><button class="btn g" data-act="shufall" data-k="${k}">${I.shuffle}<span>Zufall</span></button></div>`;
 const load=async(el,fn)=>{el.innerHTML='<div class="msg">Lade…</div>';try{el.innerHTML=await fn()}catch(e){el.innerHTML=`<div class="msg err">${esc(e.message)}</div>`}};
@@ -656,10 +816,10 @@ async function vProfile(u,tab='tracks'){
   const p=await api('profile',{u}), st=p.stats||{}, f=S.follow.some(x=>x.id==p.id), loc=[p.location?.city,p.location?.country].filter(Boolean).join(', ');
   const bg=p.headerUrl?`style="background-image:linear-gradient(#0003,#0008),url('${esc(p.headerUrl)}')"`:'';
   const base='profile/'+enc(u);
-  view.innerHTML=`<div class="hero pf" ${bg}>${img(p.avatarUrl)}<div class="box"><h1>${esc(p.username)}${p.badges?.verified?' ✔':''}</h1>
+  view.innerHTML=`<div class="hero pf" ${bg}>${img(p.avatarUrl)}<div class="box"><h1>${esc(p.username)}${p.badges?.verified?V:''}</h1>
   <div class="sub"><span>${esc(p.fullName||'')}${loc?' · '+esc(loc):''}</span></div>
   <div class="sub"><span>${num(st.followers)} Follower · ${num(st.following)} Folge ich · ${num(st.tracks)} Tracks</span></div>
-  <div class="btns"><button class="btn${f?' on':''}" data-act="follow" data-p='${esc(JSON.stringify({id:p.id,username:p.username,permalinkUrl:p.permalinkUrl,avatarUrl:p.avatarUrl}))}'>${f?'✓ Folge ich':'Folgen'}</button>
+  <div class="btns"><button class="btn${f?' on':''}" data-act="follow" data-p='${esc(JSON.stringify({id:p.id,username:p.username,permalinkUrl:p.permalinkUrl,avatarUrl:p.avatarUrl}))}'>${f?I.check+'Folge ich':'Folgen'}</button>
   <a class="btn g" href="${esc(p.permalinkUrl)}" target="_blank" rel="noopener">Auf SoundCloud</a></div></div></div>`+
   tabs(base,[['tracks','Tracks'],['playlists','Playlists'],['info','Info']],tab)+'<div id="r"></div>';
   load($('#r'),async()=>{
@@ -679,7 +839,7 @@ async function vTrack(url){
   view.innerHTML='<div class="msg">Lade…</div>';
   const t=await api('track',{url});t.permalinkUrl=t.permalinkUrl||url;
   const s=reg([t])[0];s.streamUrl=t.streamUrl;LISTS.tk=[s];
-  view.innerHTML=`<div class="hero" data-id="${t.id}">${img(t.artworkUrl)}<div class="box"><h1>${esc(t.title)}</h1><div class="sub"><span><a href="${pLink(t.artist)}">${esc(t.artist?.username)}</a>${t.genre?' · '+esc(t.genre):''}</span></div>
+  view.innerHTML=`<div class="hero" data-id="${t.id}">${img(t.artworkUrl)}<div class="box"><h1>${esc(t.title)}</h1><div class="sub"><span><a href="${pLink(t.artist)}">${aName(t.artist)}</a>${t.genre?' · '+esc(t.genre):''}</span></div>
   <div class="sub"><span>${num(t.stats?.plays)} Wiedergaben · ${num(t.stats?.likes)} Likes · ${tm(t.duration)}</span></div>
   <div class="btns"><button class="btn" data-act="playall" data-k="tk">${I.play}<span>Abspielen</span></button><button class="btn g${liked(t.id)?' liked':''}" data-act="like">${I.heart}<span>Gefällt mir</span></button><button class="btn g" data-act="more">${I.more}<span>Mehr</span></button></div></div></div>
   ${t.description?`<p class="bio">${esc(t.description)}</p>`:''}<h2>Ähnliche Tracks</h2><div id="r"></div>`;
@@ -705,6 +865,7 @@ function vMylist(name){
 /* ---------- Router ---------- */
 async function route(){
   const p=location.hash.replace(/^#\//,'').split('/').map(x=>{try{return decodeURIComponent(x)}catch{return x}});
+  closeFP();
   view.dataset.list='';mainEl.scrollTop=0;
   $('#n-home').classList.toggle('on',!p[0]||p[0]==='home');$('#n-lib').classList.toggle('on',p[0]==='library'||p[0]==='mylist');
   try{
@@ -735,16 +896,17 @@ if(matchMedia){try{matchMedia('(prefers-color-scheme:dark)').addEventListener('c
 
 function heights(id){if(wave[id])return wave[id];let s=Number(id)||1234,a=[],v=.5;
   for(let i=0;i<150;i++){s=(s*9301+49297)%233280;v=Math.max(.12,Math.min(1,v*.55+(s/233280)*.6));a.push(v)}return wave[id]=a}
-function draw(){
-  const c=$('#wv'),d=devicePixelRatio||1,w=c.clientWidth,h=c.clientHeight;
-  if(!w)return;
+function drawOne(c,barW=2.5,gap=2.5){
+  if(!c)return;
+  const d=devicePixelRatio||1,w=c.clientWidth,h=c.clientHeight;
+  if(!w||!h)return;
   c.width=w*d;c.height=h*d;
   const x=c.getContext('2d');
   x.setTransform(d,0,0,d,0,0);
   x.clearRect(0,0,w,h);
   const {acc,base}=colors();
   const hs=heights(cur?.id||0);
-  const barW=2.5,gap=2.5,step=barW+gap;
+  const step=barW+gap;
   const n=Math.max(1,Math.floor((w+gap)/step));
   const p=au.duration?Math.min(1,au.currentTime/au.duration):0;
   for(let i=0;i<n;i++){
@@ -752,14 +914,22 @@ function draw(){
     const bh=Math.max(2.5,v*(h-5));
     const bx=i*step,by=(h-bh)/2;
     x.fillStyle=(i/n)<p?acc:base;
-    if(x.roundRect){x.beginPath();x.roundRect(bx,by,barW,bh,1.25);x.fill()}
+    if(x.roundRect){x.beginPath();x.roundRect(bx,by,barW,bh,barW/2);x.fill()}
     else x.fillRect(bx,by,barW,bh);
   }
 }
+function draw(){
+  drawOne($('#wv'));
+  if($('#fp').classList.contains('open'))drawOne($('#fpwv'),4,3);
+}
+function seekTo(c,e){if(!au.duration)return;const r=c.getBoundingClientRect();au.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*au.duration}
+
 async function playQueue(list,i,shuffle){Q=list.filter(Boolean);if(shuffle){Q=Q.slice().sort(()=>Math.random()-.5);i=0}playAt(i)}
 async function playAt(i){
   if(i<0||i>=Q.length)return;qi=i;const t=cur=Q[i],my=++tok;
-  $('#nt').textContent=t.title;$('#nt').href='#/track/'+enc(t.permalinkUrl);$('#na').textContent=t.artist?.username||'';$('#na').href=pLink(t.artist);$('#ni').src=t.artworkUrl||'';
+  $('#nt').textContent=t.title;$('#nt').href='#/track/'+enc(t.permalinkUrl);
+  $('#na').innerHTML=aName(t.artist);$('#na').href=pLink(t.artist);
+  $('#ni').src=t.artworkUrl||'';
   syncUI();draw();
   try{
     if(!t.streamUrl){const m=await api('track',{url:t.permalinkUrl});if(my!==tok)return;t.streamUrl=m.streamUrl;t.duration=t.duration||m.duration}
@@ -781,36 +951,106 @@ async function next(auto){
   if(auto&&cur?.id){try{const r=reg(await api('explore',{type:'related',id:cur.id})).filter(t=>!Q.some(x=>x.id==t.id));if(r.length){Q.push(...r);toast('Ähnliche Tracks werden gespielt');return playAt(qi+1)}}catch{}}
 }
 function prev(){if(au.currentTime>3||qi<=0){au.currentTime=0}else playAt(qi-1)}
+
 function syncUI(){
-  $('#pp').innerHTML=au.paused?I.play:I.pause;
+  const pIcon=au.paused?I.play:I.pause;
+  $('#pp').innerHTML=pIcon;
   $('#sh').classList.toggle('on',S.shuf);
   $('#rp').classList.toggle('on',S.rep>0);
   $('#rp').classList.toggle('one',S.rep===2);
   $('#nl').classList.toggle('liked',!!cur&&liked(cur.id));
   document.querySelectorAll('[data-id]').forEach(e=>e.classList.toggle('on',!!cur&&e.dataset.id==cur.id&&e.classList.contains('tr')));
-  if($('#qp').classList.contains('open'))renderQ();
+  syncFP();
+  if($('#qp').classList.contains('open')||$('#fp').classList.contains('showq'))renderQ();
 }
+
+/* ---------- Vollbild-Player ---------- */
+const fpEl=$('#fp');
+function syncFP(){
+  const t=cur;
+  const im=$('#fp-img'), src=t?.artworkUrl||'';
+  if(im.dataset.src!==src){
+    im.dataset.src=src;
+    if(src){im.src=src;im.style.visibility='visible'}else{im.removeAttribute('src');im.style.visibility='hidden'}
+    $('#fpb').style.backgroundImage=src?`url("${src.replace(/"/g,'%22')}")`:'none';
+  }
+  $('#fp-title').textContent=t?t.title:'Nichts spielt';
+  $('#fp-title').href=t?'#/track/'+enc(t.permalinkUrl):'#';
+  const a=$('#fp-artist');
+  if(t?.artist){a.innerHTML=aName(t.artist);a.href=pLink(t.artist);a.style.visibility='visible'}
+  else{a.textContent='';a.style.visibility='hidden'}
+  const op=$('#fp-open');
+  if(t?.permalinkUrl){op.href=t.permalinkUrl;op.style.visibility='visible'}else{op.removeAttribute('href');op.style.visibility='hidden'}
+  $('#fp-pp').innerHTML=au.paused?I.play:I.pause;
+  $('#fp-pp').title=au.paused?'Abspielen':'Pause';
+  $('#fp-sh').classList.toggle('on',S.shuf);
+  $('#fp-rp').classList.toggle('on',S.rep>0);
+  $('#fp-rp').classList.toggle('one',S.rep===2);
+  $('#fp-like').classList.toggle('liked',!!cur&&liked(cur.id));
+}
+function openFP(){
+  fpEl.classList.add('open');fpEl.setAttribute('aria-hidden','false');
+  syncFP();
+  requestAnimationFrame(()=>draw());
+}
+function closeFP(){
+  if(!fpEl.classList.contains('open'))return;
+  fpEl.classList.remove('open','showq');
+  fpEl.setAttribute('aria-hidden','true');
+  draw();
+}
+
 au.onplay=au.onpause=syncUI;
+au.onloadedmetadata=()=>{$('#du').textContent=tm((au.duration||0)*1000);$('#fp-dur').textContent=tm((au.duration||0)*1000);draw()};
 au.onended=()=>S.rep===2?(au.currentTime=0,au.play()):next(true);
-au.ontimeupdate=()=>{$('#cu').textContent=tm(au.currentTime*1000);$('#du').textContent=tm((au.duration||cur?.duration/1000||0)*1000);draw()};
-$('#wv').onclick=e=>{if(au.duration){const r=e.target.getBoundingClientRect();au.currentTime=(e.clientX-r.left)/r.width*au.duration}};
+au.ontimeupdate=()=>{
+  const c=tm(au.currentTime*1000), d=tm((au.duration||cur?.duration/1000||0)*1000);
+  $('#cu').textContent=c;$('#du').textContent=d;
+  $('#fp-cur').textContent=c;$('#fp-dur').textContent=d;
+  draw();
+};
+$('#wv').onclick=e=>seekTo(e.currentTarget,e);
+$('#fpwv').onclick=e=>seekTo(e.currentTarget,e);
 $('#pp').onclick=()=>cur&&(au.paused?au.play():au.pause());
 $('#nx').onclick=()=>next(false);$('#pv').onclick=prev;
 $('#sh').onclick=()=>{S.shuf=!S.shuf;save();syncUI()};
 $('#rp').onclick=()=>{S.rep=(S.rep+1)%3;save();syncUI()};
-$('#vol').value=S.vol;au.volume=S.vol;$('#vol').oninput=e=>{au.volume=S.vol=+e.target.value;save()};
+
+$('#expand').onclick=openFP;
+$('#ni').onclick=openFP;
+$('#fp-close').onclick=closeFP;
+$('#fp-queue').onclick=()=>{fpEl.classList.toggle('showq');if(fpEl.classList.contains('showq'))renderQ()};
+$('#fp-pp').onclick=()=>cur&&(au.paused?au.play():au.pause());
+$('#fp-pv').onclick=prev;
+$('#fp-nx').onclick=()=>next(false);
+$('#fp-sh').onclick=()=>{S.shuf=!S.shuf;save();syncUI()};
+$('#fp-rp').onclick=()=>{S.rep=(S.rep+1)%3;save();syncUI()};
+
+function setVol(v){v=Math.max(0,Math.min(1,v));au.volume=S.vol=v;save();$('#vol').value=v;$('#fp-vol').value=v}
+$('#vol').oninput=e=>setVol(+e.target.value);
+$('#fp-vol').oninput=e=>setVol(+e.target.value);
+setVol(S.vol);
+
 addEventListener('resize',draw);
 if('mediaSession'in navigator){const m=navigator.mediaSession;m.setActionHandler('play',()=>au.play());m.setActionHandler('pause',()=>au.pause());m.setActionHandler('nexttrack',()=>next(false));m.setActionHandler('previoustrack',prev)}
-addEventListener('keydown',e=>{if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
+addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&fpEl.classList.contains('open')){closeFP();return}
+  if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
   if(e.code==='Space'){e.preventDefault();$('#pp').click()}
   else if(e.key==='ArrowRight'){e.shiftKey?next(false):au.currentTime+=10}
   else if(e.key==='ArrowLeft'){e.shiftKey?prev():au.currentTime-=10}});
 
 /* ---------- Warteschlange ---------- */
-function renderQ(){
+function qHTML(){
   const up=Q.slice(qi+1);
-  $('#qp').innerHTML=`<h3>Warteschlange<button class="mini-btn" data-act="clearq">Leeren</button></h3>`+(cur?`<div class="a">Spielt gerade</div><div class="tr on" data-id="${cur.id}">${img(cur.artworkUrl)}<div class="m"><span class="t">${esc(cur.title)}</span><span class="a">${esc(cur.artist?.username||'')}</span></div></div>`:'')+
-  (up.length?`<div class="a" style="margin:14px 0 4px">Als Nächstes</div>`+up.map((t,i)=>`<div class="tr" data-qi="${qi+1+i}">${img(t.artworkUrl)}<div class="m"><span class="t">${esc(t.title)}</span><span class="a">${esc(t.artist?.username||'')}</span></div><button class="ic" data-act="rmq" data-qi="${qi+1+i}" title="Entfernen">${I.close}</button></div>`).join(''):'<div class="msg">Nichts mehr in der Warteschlange.</div>');
+  return `<h3>Warteschlange<button class="mini-btn" data-act="clearq">Leeren</button></h3>`+
+    (cur?`<div class="a" style="margin-bottom:4px">Spielt gerade</div><div class="tr on" data-id="${cur.id}">${img(cur.artworkUrl)}<div class="m"><span class="t">${esc(cur.title)}</span><span class="a">${aName(cur.artist)}</span></div></div>`:'')+
+    (up.length?`<div class="a" style="margin:14px 0 4px">Als Nächstes</div>`+up.map((t,i)=>`<div class="tr" data-qi="${qi+1+i}">${img(t.artworkUrl)}<div class="m"><span class="t">${esc(t.title)}</span><span class="a">${aName(t.artist)}</span></div><button class="ic" data-act="rmq" data-qi="${qi+1+i}" title="Entfernen">${I.close}</button></div>`).join(''):'<div class="msg">Nichts mehr in der Warteschlange.</div>');
+}
+function renderQ(){
+  const h=qHTML();
+  $('#qp').innerHTML=h;
+  const f=$('#fpqlist');if(f)f.innerHTML=h;
 }
 $('#qb').onclick=()=>{$('#qp').classList.toggle('open');renderQ()};
 
@@ -836,7 +1076,8 @@ const ACT={
   more:(b,e)=>{const t=TR[b.closest('[data-id]')?.dataset.id];if(t){const r=b.getBoundingClientRect();trackMenu(t,r.left,r.bottom)}},
   playall:b=>playQueue(LISTS[b.dataset.k]||[],0),
   shufall:b=>playQueue(LISTS[b.dataset.k]||[],0,true),
-  follow:b=>{const p=JSON.parse(b.dataset.p);const f=S.follow.some(x=>x.id==p.id);S.follow=f?S.follow.filter(x=>x.id!=p.id):[p,...S.follow];save();b.classList.toggle('on',!f);b.textContent=f?'Folgen':'✓ Folge ich'},
+  follow:b=>{const p=JSON.parse(b.dataset.p);const f=S.follow.some(x=>x.id==p.id);S.follow=f?S.follow.filter(x=>x.id!=p.id):[p,...S.follow];save();
+    b.classList.toggle('on',!f);b.innerHTML=f?'Folgen':I.check+'Folge ich'},
   savelist:b=>{S.lists[b.dataset.name]=LISTS.pl.map(slim);save();toast('Gespeichert in der Bibliothek')},
   newlist:()=>{const n=prompt('Name der Playlist:');if(n?.trim()){S.lists[n.trim()]=S.lists[n.trim()]||[];save();vLibrary('lists')}},
   renlist:b=>{const o=b.dataset.name,n=prompt('Neuer Name:',o)?.trim();if(n&&n!==o){S.lists[n]=S.lists[o];delete S.lists[o];save();location.hash='#/mylist/'+enc(n)}},
@@ -857,6 +1098,8 @@ document.addEventListener('click',e=>{
 /* ---------- Icons in statische Buttons einsetzen ---------- */
 $('#pv').innerHTML=I.prev;$('#pp').innerHTML=I.play;$('#nx').innerHTML=I.next;
 $('#sh').innerHTML=I.shuffle;$('#rp').innerHTML=I.repeat;$('#nl').innerHTML=I.heart;
+$('#fp-pv').innerHTML=I.prev;$('#fp-nx').innerHTML=I.next;$('#fp-pp').innerHTML=I.play;
+$('#fp-sh').innerHTML=I.shuffle;$('#fp-rp').innerHTML=I.repeat;$('#fp-like').innerHTML=I.heart;
 
 route();syncUI();draw();
 </script>
