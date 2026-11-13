@@ -28,8 +28,8 @@
   --radius-sm:10px;
   --pill:999px;
   --shadow-panel:inset 0 1px 0 rgba(255,255,255,.04),0 8px 32px rgba(0,0,0,.45);
-  --fp-veil:linear-gradient(180deg,rgba(0,0,0,.58),rgba(0,0,0,.9));
   --ease:cubic-bezier(.4,0,.2,1);
+  --sheet-ease:cubic-bezier(.32,.72,0,1);
 }
 @media(prefers-color-scheme:light){
   :root{
@@ -46,7 +46,6 @@
     --fg-2:#525252;
     --mute:#8a8a8a;
     --shadow-panel:inset 0 1px 0 rgba(255,255,255,.6),0 8px 32px rgba(0,0,0,.08);
-    --fp-veil:linear-gradient(180deg,rgba(255,255,255,.8),rgba(255,255,255,.95));
   }
 }
 
@@ -254,6 +253,7 @@ h2:first-child{margin-top:0}
 .ic:hover{background:var(--surface-2);color:var(--fg)}
 .ic.liked{color:var(--acc)}
 .ic.liked:hover{background:rgba(255,90,31,.14);color:var(--acc-hi)}
+.ic.on{color:var(--acc)}
 @media(hover:hover){
   .tr .ic{opacity:0}
   .tr:hover .ic,.tr .ic.liked,.tr .ic:focus-visible{opacity:1}
@@ -399,7 +399,9 @@ h2:first-child{margin-top:0}
 }
 #bar .c button:hover{background:var(--surface-2);color:var(--fg)}
 #bar .c button.on{color:var(--acc)}
-#bar .c button.one::after,
+#bar .c button.liked{color:var(--acc)}
+#bar .c button.liked:hover{background:rgba(255,90,31,.14);color:var(--acc-hi)}
+#bar .ic.one::after,
 #fp .ic.one::after{
   content:'1';position:absolute;top:3px;right:3px;
   font-size:9px;font-weight:700;line-height:1;
@@ -429,8 +431,9 @@ h2:first-child{margin-top:0}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 #np .a{font-size:11.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#bar .ic{width:36px;height:36px;border-radius:50%}
 
-/* ============ QUEUE PANEL ============ */
+/* ============ QUEUE PANEL (Sidebar) ============ */
 #qp{
   position:fixed;right:8px;top:8px;bottom:88px;z-index:25;
   width:360px;max-width:calc(100% - 16px);
@@ -446,8 +449,9 @@ h2:first-child{margin-top:0}
 @keyframes slideIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
 #qp h3,#fpqlist h3{
   margin:0 0 16px;font-size:15px;font-weight:600;letter-spacing:-.01em;
-  display:flex;justify-content:space-between;align-items:center;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
 }
+#qp h3 .qh,#fpqlist h3 .qh{display:flex;gap:8px;flex:none}
 #qp .tr img,#qp .tr .ph,
 #fpqlist .tr img,#fpqlist .tr .ph{width:40px;height:40px}
 #qp .a,#fpqlist .a{font-size:12px;color:var(--mute)}
@@ -456,105 +460,130 @@ h2:first-child{margin-top:0}
   padding:5px 12px;border-radius:var(--pill);
   border:1px solid var(--border-2);
   transition:background .15s,color .15s;
+  white-space:nowrap;
 }
 .mini-btn:hover{background:var(--surface-2);color:var(--fg)}
 
-/* ============ FULL PLAYER ============ */
+/* ============ FULL PLAYER — BOTTOM SHEET ============ */
+#fp-veil{
+  position:fixed;inset:0;z-index:44;
+  background:rgba(0,0,0,.58);
+  -webkit-backdrop-filter:blur(10px) saturate(140%);
+          backdrop-filter:blur(10px) saturate(140%);
+  opacity:0;pointer-events:none;
+  transition:opacity .35s var(--ease);
+}
+#fp-veil.open{opacity:1;pointer-events:auto}
+
 #fp{
-  position:fixed;inset:0;z-index:45;
-  display:none;background:var(--bg);color:var(--fg);
-  overflow:hidden;
-}
-#fp.open{display:block;animation:fpIn .32s var(--ease)}
-@keyframes fpIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
-#fpb{
-  position:absolute;inset:-25%;z-index:0;
-  background-position:center;background-size:cover;
-  filter:blur(90px) saturate(1.7);
-  opacity:.55;pointer-events:none;
-}
-#fp::after{
-  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:var(--fp-veil);
-}
-.fp-wrap{
-  position:relative;z-index:1;
-  height:100%;max-width:1400px;margin:0 auto;
+  position:fixed;left:50%;bottom:0;z-index:45;
+  width:min(100%,600px);
+  max-height:92dvh;max-height:92vh;
+  transform:translate(-50%,105%);
+  visibility:hidden;
+  transition:transform .42s var(--sheet-ease),visibility 0s linear .42s;
   display:flex;flex-direction:column;
-  padding:14px clamp(16px,4vw,44px) 26px;
+  overflow:hidden;
+  background:var(--panel);
+  color:var(--fg);
+  border:1px solid var(--border-2);
+  border-bottom:0;
+  border-radius:24px 24px 0 0;
+  box-shadow:0 -24px 80px rgba(0,0,0,.6);
 }
-.fp-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none}
-.fp-top .ic{width:40px;height:40px;border-radius:50%}
-.fp-hint{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);font-weight:700}
-.fp-body{
-  flex:1;min-height:0;
-  display:flex;align-items:center;justify-content:center;
-  gap:clamp(24px,5vw,64px);padding:10px 0;
+#fp.open{
+  transform:translate(-50%,0);
+  visibility:visible;
+  transition:transform .42s var(--sheet-ease),visibility 0s;
 }
-.fp-art{flex:none;display:flex;align-items:center;justify-content:center}
+
+#fpb{
+  position:absolute;left:-20%;right:-20%;top:-30%;height:75%;
+  z-index:0;pointer-events:none;
+  background-position:center;background-size:cover;
+  filter:blur(70px) saturate(1.8);
+  opacity:.38;
+  -webkit-mask-image:linear-gradient(#000 20%,transparent 95%);
+          mask-image:linear-gradient(#000 20%,transparent 95%);
+}
+.fp-grab{
+  position:relative;z-index:1;flex:none;
+  width:42px;height:4px;border-radius:99px;
+  background:var(--surface-3);
+  margin:10px auto 0;
+}
+.fp-head{
+  position:relative;z-index:1;flex:none;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:6px 10px 2px;
+}
+.fp-head .ic{width:40px;height:40px;border-radius:50%}
+.fp-hint{
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--mute);font-weight:700;
+}
+.fp-scroll{
+  position:relative;z-index:1;
+  flex:1;min-height:0;overflow-y:auto;
+  display:flex;flex-direction:column;gap:14px;
+  padding:4px clamp(16px,5vw,30px) calc(24px + env(safe-area-inset-bottom,0px));
+}
+.fp-art{display:flex;justify-content:center;padding-top:4px}
 .fp-art img{
-  width:clamp(180px,42vh,400px);height:clamp(180px,42vh,400px);
-  object-fit:cover;border-radius:16px;
-  background:var(--surface-2);
-  box-shadow:0 30px 80px -24px rgba(0,0,0,.85);
+  width:min(62vw,280px);height:min(62vw,280px);
+  aspect-ratio:1;object-fit:cover;
+  border-radius:18px;background:var(--surface-2);
+  box-shadow:0 24px 70px -20px rgba(0,0,0,.85);
 }
-.fp-side{flex:1;min-width:0;max-width:560px;display:flex;flex-direction:column;gap:10px}
-.fp-meta{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fp-meta{text-align:center;display:flex;flex-direction:column;gap:4px}
 .fp-title{
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
   overflow:hidden;word-break:break-word;
-  font-size:clamp(20px,2.4vw,30px);font-weight:800;
+  font-size:clamp(19px,4.4vw,24px);font-weight:800;
   letter-spacing:-.03em;line-height:1.18;color:var(--fg);
+  transition:color .15s;
 }
+.fp-title:hover{color:var(--acc)}
 .fp-artist{
-  display:inline-flex;align-items:center;
-  font-size:14.5px;font-weight:500;color:var(--fg-2);
-  width:fit-content;max-width:100%;
+  display:inline-flex;align-items:center;justify-content:center;
+  margin:0 auto;max-width:100%;
+  font-size:14px;font-weight:500;color:var(--fg-2);
   overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
 }
-#fpwv{width:100%;height:72px;display:block;cursor:pointer;border-radius:8px}
+.fp-prog{display:flex;flex-direction:column;gap:2px}
+#fpwv{width:100%;height:64px;display:block;cursor:pointer;border-radius:8px}
 .fp-times{
   display:flex;justify-content:space-between;
   font-size:12px;color:var(--mute);
-  font-variant-numeric:tabular-nums;margin-top:-6px;
+  font-variant-numeric:tabular-nums;
 }
-.fp-controls{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px}
-.fp-controls .ic{width:44px;height:44px;border-radius:50%}
+.fp-controls{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:2px}
+.fp-controls .ic{width:46px;height:46px;border-radius:50%}
 .fp-controls .ic.on{color:var(--acc)}
+.fp-controls .ic.liked{color:var(--acc)}
+.fp-controls .ic.liked:hover{background:rgba(255,90,31,.14);color:var(--acc-hi)}
 .fp-play{
-  width:64px;height:64px;border-radius:50%;
+  width:66px;height:66px;border-radius:50%;flex:none;
   background:var(--fg);color:var(--bg);
   display:inline-flex;align-items:center;justify-content:center;
-  margin:0 12px;
+  margin:0 10px;
   transition:transform .2s var(--ease),background .2s;
 }
 .fp-play:hover{transform:scale(1.06);background:var(--fg);color:var(--bg)}
 .fp-play svg{width:26px;height:26px}
-.fp-row{display:flex;align-items:center;gap:14px;margin-top:6px;flex-wrap:wrap}
-#fp-vol{width:120px;max-width:40vw;accent-color:var(--acc);cursor:pointer;height:4px}
+.fp-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:14px;flex-wrap:wrap;margin-top:2px;
+}
+#fp-vol{width:130px;max-width:42vw;accent-color:var(--acc);cursor:pointer;height:4px}
 .fp-queue{
-  position:absolute;top:0;right:0;bottom:0;z-index:3;
-  width:min(360px,100%);display:none;
-  padding:20px;overflow-y:auto;
-  background:var(--glass);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);
-          backdrop-filter:blur(24px) saturate(180%);
-  border-left:1px solid var(--border-2);
-  box-shadow:-20px 0 60px rgba(0,0,0,.4);
+  position:absolute;inset:0;z-index:3;
+  display:none;
+  padding:20px 18px calc(24px + env(safe-area-inset-bottom,0px));
+  overflow-y:auto;
+  background:var(--panel);
 }
 #fp.showq .fp-queue{display:block;animation:slideIn .25s var(--ease)}
-
-@media(max-width:820px){
-  .fp-body{
-    flex-direction:column;justify-content:flex-start;
-    gap:16px;overflow-y:auto;padding:0;
-  }
-  .fp-art img{width:min(58vw,220px);height:min(58vw,220px)}
-  .fp-side{width:100%;max-width:none;padding-bottom:8px}
-  #fpwv{height:56px}
-  .fp-play{width:56px;height:56px}
-  .fp-controls .ic{width:38px;height:38px}
-}
 
 /* ============ CONTEXT MENU ============ */
 #menu{
@@ -621,6 +650,7 @@ h2:first-child{margin-top:0}
   #bar{height:64px;gap:8px;padding:0 10px}
   #bar .c button{width:32px;height:32px}
   #bar .c #pp{width:36px;height:36px}
+  #bar .ic{width:32px;height:32px}
   #sh,#rp,.tm,#vol{display:none}
   #wv{min-width:40px;height:26px}
   #np{width:auto;padding:4px}
@@ -683,54 +713,54 @@ h2:first-child{margin-top:0}
     <button id="pp" title="Abspielen"></button>
     <button id="nx" title="Weiter"></button>
     <button id="sh" title="Zufall"></button>
-    <button id="rp" title="Wiederholen"></button>
+    <button id="nl" data-act="likecur" title="Gefällt mir"></button>
   </div>
   <span class="tm" id="cu">0:00</span>
   <canvas id="wv"></canvas>
   <span class="tm" id="du">0:00</span>
   <input type="range" id="vol" min="0" max="1" step="0.01" aria-label="Lautstärke">
-  <div id="np"><img id="ni" alt="" title="Vollbild-Player öffnen"><div><a class="t" id="nt" href="#">Nichts spielt</a><a class="a" id="na" href="#"></a></div></div>
-  <button class="ic" id="nl" data-act="likecur" title="Gefällt mir"></button>
-  <button class="ic" id="expand" title="Vollbild-Player" aria-label="Vollbild-Player öffnen">
+  <div id="np"><img id="ni" alt="" title="Player öffnen"><div><a class="t" id="nt" href="#">Nichts spielt</a><a class="a" id="na" href="#"></a></div></div>
+  <button class="ic" id="rp" title="Wiederholen"></button>
+  <button class="ic" id="expand" title="Player öffnen" aria-label="Player öffnen">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
   </button>
 </div>
 
-<!-- ============ FULL PLAYER ============ -->
-<div id="fp" aria-hidden="true" role="dialog" aria-label="Vollbild-Player">
-  <div id="fpb"></div>
-  <div class="fp-wrap">
-    <div class="fp-top">
-      <button class="ic" id="fp-close" title="Player schließen" aria-label="Player schließen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-      <div class="fp-hint">Wiedergabe</div>
-      <button class="ic" id="fp-queue" title="Warteschlange" aria-label="Warteschlange">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-      </button>
+<!-- ============ FULL PLAYER — BOTTOM SHEET ============ -->
+<div id="fp-veil" aria-hidden="true"></div>
+<div id="fp" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Player">
+  <div id="fpb" aria-hidden="true"></div>
+  <div class="fp-grab" aria-hidden="true"></div>
+  <div class="fp-head">
+    <button class="ic" id="fp-close" title="Schließen" aria-label="Player schließen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="fp-hint">Wiedergabe</div>
+    <button class="ic" id="fp-queue" title="Warteschlange" aria-label="Warteschlange">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+    </button>
+  </div>
+  <div class="fp-scroll">
+    <div class="fp-art"><img id="fp-img" alt=""></div>
+    <div class="fp-meta">
+      <a class="fp-title" id="fp-title" href="#">Nichts spielt</a>
+      <a class="fp-artist" id="fp-artist" href="#"></a>
     </div>
-    <div class="fp-body">
-      <div class="fp-art"><img id="fp-img" alt=""></div>
-      <div class="fp-side">
-        <div class="fp-meta">
-          <a class="fp-title" id="fp-title" href="#">Nichts spielt</a>
-          <a class="fp-artist" id="fp-artist" href="#"></a>
-        </div>
-        <canvas id="fpwv"></canvas>
-        <div class="fp-times"><span id="fp-cur">0:00</span><span id="fp-dur">0:00</span></div>
-        <div class="fp-controls">
-          <button class="ic" id="fp-sh" title="Zufall"></button>
-          <button class="ic" id="fp-pv" title="Zurück"></button>
-          <button class="fp-play" id="fp-pp" title="Abspielen"></button>
-          <button class="ic" id="fp-nx" title="Weiter"></button>
-          <button class="ic" id="fp-rp" title="Wiederholen"></button>
-        </div>
-        <div class="fp-row">
-          <button class="ic" id="fp-like" data-act="likecur" title="Gefällt mir"></button>
-          <input type="range" id="fp-vol" min="0" max="1" step="0.01" aria-label="Lautstärke">
-          <a class="mini-btn" id="fp-open" href="#" target="_blank" rel="noopener">Auf SoundCloud</a>
-        </div>
-      </div>
+    <div class="fp-prog">
+      <canvas id="fpwv"></canvas>
+      <div class="fp-times"><span id="fp-cur">0:00</span><span id="fp-dur">0:00</span></div>
+    </div>
+    <div class="fp-controls">
+      <button class="ic" id="fp-sh" title="Zufall"></button>
+      <button class="ic" id="fp-pv" title="Zurück"></button>
+      <button class="fp-play" id="fp-pp" title="Abspielen"></button>
+      <button class="ic" id="fp-nx" title="Weiter"></button>
+      <button class="ic" id="fp-like" data-act="likecur" title="Gefällt mir"></button>
+    </div>
+    <div class="fp-row">
+      <button class="ic" id="fp-rp" title="Wiederholen"></button>
+      <input type="range" id="fp-vol" min="0" max="1" step="0.01" aria-label="Lautstärke">
+      <a class="mini-btn" id="fp-open" href="#" target="_blank" rel="noopener">Auf SoundCloud</a>
     </div>
   </div>
   <aside class="fp-queue"><div id="fpqlist"></div></aside>
@@ -953,8 +983,7 @@ async function next(auto){
 function prev(){if(au.currentTime>3||qi<=0){au.currentTime=0}else playAt(qi-1)}
 
 function syncUI(){
-  const pIcon=au.paused?I.play:I.pause;
-  $('#pp').innerHTML=pIcon;
+  $('#pp').innerHTML=au.paused?I.play:I.pause;
   $('#sh').classList.toggle('on',S.shuf);
   $('#rp').classList.toggle('on',S.rep>0);
   $('#rp').classList.toggle('one',S.rep===2);
@@ -964,15 +993,16 @@ function syncUI(){
   if($('#qp').classList.contains('open')||$('#fp').classList.contains('showq'))renderQ();
 }
 
-/* ---------- Vollbild-Player ---------- */
-const fpEl=$('#fp');
+/* ---------- Vollbild-Player (Bottom Sheet) ---------- */
+const fpEl=$('#fp'), fpVeil=$('#fp-veil');
 function syncFP(){
   const t=cur;
   const im=$('#fp-img'), src=t?.artworkUrl||'';
   if(im.dataset.src!==src){
     im.dataset.src=src;
     if(src){im.src=src;im.style.visibility='visible'}else{im.removeAttribute('src');im.style.visibility='hidden'}
-    $('#fpb').style.backgroundImage=src?`url("${src.replace(/"/g,'%22')}")`:'none';
+    const b=$('#fpb');
+    if(b)b.style.backgroundImage=src?`url("${src.replace(/"/g,'%22')}")`:'none';
   }
   $('#fp-title').textContent=t?t.title:'Nichts spielt';
   $('#fp-title').href=t?'#/track/'+enc(t.permalinkUrl):'#';
@@ -987,16 +1017,21 @@ function syncFP(){
   $('#fp-rp').classList.toggle('on',S.rep>0);
   $('#fp-rp').classList.toggle('one',S.rep===2);
   $('#fp-like').classList.toggle('liked',!!cur&&liked(cur.id));
+  $('#fp-cur').textContent=tm(au.currentTime*1000);
+  $('#fp-dur').textContent=tm((au.duration||cur?.duration/1000||0)*1000);
 }
 function openFP(){
-  fpEl.classList.add('open');fpEl.setAttribute('aria-hidden','false');
+  fpEl.classList.add('open');fpVeil.classList.add('open');
+  fpEl.setAttribute('aria-hidden','false');
   syncFP();
-  requestAnimationFrame(()=>draw());
+  requestAnimationFrame(()=>requestAnimationFrame(draw));
 }
 function closeFP(){
   if(!fpEl.classList.contains('open'))return;
   fpEl.classList.remove('open','showq');
+  fpVeil.classList.remove('open');
   fpEl.setAttribute('aria-hidden','true');
+  $('#fp-queue').classList.remove('on');
   draw();
 }
 
@@ -1019,7 +1054,12 @@ $('#rp').onclick=()=>{S.rep=(S.rep+1)%3;save();syncUI()};
 $('#expand').onclick=openFP;
 $('#ni').onclick=openFP;
 $('#fp-close').onclick=closeFP;
-$('#fp-queue').onclick=()=>{fpEl.classList.toggle('showq');if(fpEl.classList.contains('showq'))renderQ()};
+fpVeil.onclick=closeFP;
+$('#fp-queue').onclick=()=>{
+  const on=fpEl.classList.toggle('showq');
+  $('#fp-queue').classList.toggle('on',on);
+  if(on)renderQ();
+};
 $('#fp-pp').onclick=()=>cur&&(au.paused?au.play():au.pause());
 $('#fp-pv').onclick=prev;
 $('#fp-nx').onclick=()=>next(false);
@@ -1041,16 +1081,17 @@ addEventListener('keydown',e=>{
   else if(e.key==='ArrowLeft'){e.shiftKey?prev():au.currentTime-=10}});
 
 /* ---------- Warteschlange ---------- */
-function qHTML(){
+function qHTML(close){
   const up=Q.slice(qi+1);
-  return `<h3>Warteschlange<button class="mini-btn" data-act="clearq">Leeren</button></h3>`+
+  return `<h3><span>Warteschlange</span><span class="qh">`+
+    (close?`<button class="mini-btn" data-act="closeq">Schließen</button>`:'')+
+    `<button class="mini-btn" data-act="clearq">Leeren</button></span></h3>`+
     (cur?`<div class="a" style="margin-bottom:4px">Spielt gerade</div><div class="tr on" data-id="${cur.id}">${img(cur.artworkUrl)}<div class="m"><span class="t">${esc(cur.title)}</span><span class="a">${aName(cur.artist)}</span></div></div>`:'')+
     (up.length?`<div class="a" style="margin:14px 0 4px">Als Nächstes</div>`+up.map((t,i)=>`<div class="tr" data-qi="${qi+1+i}">${img(t.artworkUrl)}<div class="m"><span class="t">${esc(t.title)}</span><span class="a">${aName(t.artist)}</span></div><button class="ic" data-act="rmq" data-qi="${qi+1+i}" title="Entfernen">${I.close}</button></div>`).join(''):'<div class="msg">Nichts mehr in der Warteschlange.</div>');
 }
 function renderQ(){
-  const h=qHTML();
-  $('#qp').innerHTML=h;
-  const f=$('#fpqlist');if(f)f.innerHTML=h;
+  $('#qp').innerHTML=qHTML(false);
+  const f=$('#fpqlist');if(f)f.innerHTML=qHTML(true);
 }
 $('#qb').onclick=()=>{$('#qp').classList.toggle('open');renderQ()};
 
@@ -1084,6 +1125,7 @@ const ACT={
   dellist:b=>{if(confirm('Playlist „'+b.dataset.name+'“ löschen?')){delete S.lists[b.dataset.name];save();location.hash='#/library/lists'}},
   clearhist:()=>{S.hist=[];save();vLibrary('hist')},
   clearq:()=>{Q=cur?[cur]:[];qi=cur?0:-1;renderQ()},
+  closeq:()=>{fpEl.classList.remove('showq');$('#fp-queue').classList.remove('on')},
   rmq:b=>{Q.splice(+b.dataset.qi,1);renderQ()},
 };
 document.addEventListener('click',e=>{
