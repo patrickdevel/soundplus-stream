@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mein SoundCloud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 /* ============ TOKENS ============ */
 :root{
@@ -702,6 +704,78 @@ h2{font-weight:800;font-size:24px}
   #toast{bottom:140px}
   #qp{bottom:calc(126px + env(safe-area-inset-bottom));max-height:60vh}
 }
+
+/* ============ SPOTIFY MOBILE 2 ============ */
+body,button,input{font-family:"Figtree",-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",system-ui,sans-serif}
+#menu,#toast{z-index:130}
+.ic svg{width:22px;height:22px}
+#mtop,#sheet,#scrim,.sheet-only{display:none}
+.lch{margin:8px 0 14px}
+.lrow{display:flex;align-items:center;gap:14px;padding:7px 0;cursor:pointer}
+.lart{width:64px;height:64px;border-radius:4px;overflow:hidden;background:#2a2a2a;flex:none;display:grid;place-items:center}
+.lart img,.lart .ph{width:100%;height:100%;object-fit:cover}
+.lart.heart{background:linear-gradient(135deg,#450af5,#8e8ee5)}
+.lart.heart svg{width:28px;height:28px;color:#fff}
+.lart.pr{border-radius:50%}
+.lm{min-width:0;flex:1}
+.lm b{display:block;font-size:16px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lm span{display:flex;align-items:center;gap:6px;font-size:14px;color:#b3b3b3}
+.lm span svg{width:14px;height:14px;color:var(--acc);flex:none}
+#full{background:linear-gradient(to bottom,var(--fc,#0f6b1e) 0,#121212 80%)}
+#full-bg,#full::after{display:none}
+#full-head{padding:max(14px,env(safe-area-inset-top)) 12px 8px}
+.f-label{text-transform:none;letter-spacing:0;font-size:14px;font-weight:700;color:#fff}
+#f-more{width:40px;height:40px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;justify-self:end}
+#f-more svg{width:22px;height:22px}
+#full-body{padding:0 16px 20px;gap:20px}
+.full-art{width:min(100%,max(160px,calc(100dvh - 500px)));border-radius:8px}
+.full-meta{align-items:center}
+#f-title{font-size:22px;font-weight:800}
+#f-artist{font-size:16px;color:rgba(255,255,255,.72)}
+#f-like{width:44px;height:44px}
+#f-like svg{width:30px;height:30px}
+.full-controls #f-pp{width:76px;height:76px}
+.full-extras .ic{width:40px;height:40px;color:#fff}
+#f-share{margin-left:auto}
+#f-next{display:none;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.1);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+#f-next.on{display:flex}
+#f-next img{width:40px;height:40px;border-radius:4px;object-fit:cover;flex:none}
+#f-next .tx{min-width:0;flex:1;display:flex;flex-direction:column}
+#f-next .k{font-size:12px;color:rgba(255,255,255,.7)}
+#f-next .v{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:900px){
+  .dsk{display:none!important}
+  #topbar{display:none}
+  #mtop{display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5;padding:max(12px,env(safe-area-inset-top)) 16px 10px;background:rgba(18,18,18,.5);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  #mtop h1{flex:1;margin:0;font-size:26px;font-weight:800;letter-spacing:-.02em}
+  .av{width:40px;height:40px;border-radius:50%;background:#535353;color:#b3b3b3;display:grid;place-items:center;flex:none;overflow:hidden}
+  .av svg{width:26px;height:26px;margin-top:6px}
+  .mic{width:40px;height:40px;display:grid;place-items:center;color:#fff;flex:none;border-radius:50%}
+  .mic svg{width:26px;height:26px}
+  .mchips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+  .mchips::-webkit-scrollbar{display:none}
+  .mchips .chip,.lch .chip{background:#2a2a2a;padding:8px 16px;font-size:14px}
+  .mchips .chip.on,.lch .chip.on{background:var(--acc);color:#000}
+  .lch{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+  .tile{height:56px}
+  #tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-top:6px;font-size:10.5px;font-weight:500;color:#b3b3b3}
+  .pl2{display:grid;place-items:center;width:24px;height:24px;border-radius:50%}
+  .pl2 svg{width:24px;height:24px;transition:transform .2s}
+  .sheet-open #scrim{display:block;position:fixed;inset:0;z-index:37;background:rgba(0,0,0,.72)}
+  .sheet-open #sheet{display:block;position:fixed;left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:39;background:#1f1f1f;border-radius:16px;padding:8px;animation:pop .18s var(--ease)}
+  .sheet-open #t-new{color:#fff}
+  .sheet-open #t-new span:last-child{display:none}
+  .sheet-open #t-new .pl2{width:56px;height:56px;background:#fff;color:#000;margin-bottom:6px}
+  .sheet-open #t-new .pl2 svg{transform:rotate(45deg);width:30px;height:30px}
+  .srow{display:flex;align-items:center;gap:16px;width:100%;text-align:left;padding:12px;border-radius:12px}
+  .srow:active{background:rgba(255,255,255,.08)}
+  .sic{width:56px;height:56px;border-radius:50%;background:#3a3a3a;display:grid;place-items:center;flex:none}
+  .sic svg{width:26px;height:26px}
+  .srow b{display:block;font-size:18px;font-weight:700}
+  .srow em{font-style:normal;color:#b3b3b3;font-size:15px}
+  .full-extras .vi,#f-vol{display:none}
+  #np .ic svg{width:26px;height:26px}
+}
 </style>
 </head>
 <body>
@@ -722,7 +796,7 @@ h2{font-weight:800;font-size:24px}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
         <span class="lbl">Start</span>
       </a>
-      <a class="lk" href="#/library/likes" id="n-lib">
+      <a class="lk" href="#/library/lists" id="n-lib">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16"/><path d="M9 4v16"/><path d="M14 4l5 16"/></svg>
         <span class="lbl">Bibliothek</span>
       </a>
@@ -733,6 +807,7 @@ h2{font-weight:800;font-size:24px}
     </form>
   </nav>
   <main id="main">
+    <div id="mtop"></div>
     <div id="topbar">
       <button class="nav-circ" id="back" title="Zurück" aria-label="Zurück">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -790,8 +865,14 @@ h2{font-weight:800;font-size:24px}
 
 <div id="tabbar">
   <a href="#/home" id="t-home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg><span>Start</span></a>
-  <a href="#/find" id="t-find"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span>Suche</span></a>
-  <a href="#/library/likes" id="t-lib"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16"/><path d="M9 4v16"/><path d="M14 4l5 16"/></svg><span>Bibliothek</span></a>
+  <a href="#/find" id="t-find"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span>Suchen</span></a>
+  <a href="#/library/lists" id="t-lib"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16"/><path d="M9 4v16"/><path d="M14 4l5 16"/></svg><span>Bibliothek</span></a>
+  <button id="t-new" type="button"><span class="pl2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4v16M4 12h16"/></svg></span><span>Erstellen</span></button>
+</div>
+<div id="scrim"></div>
+<div id="sheet">
+  <button class="srow" data-act="sheetnew"><span class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></span><span><b>Playlist</b><em>Erstelle eine Playlist mit Songs.</em></span></button>
+  <button class="srow" data-act="pastelink"><span class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/></svg></span><span><b>Link öffnen</b><em>Track, Playlist oder Profil per Link.</em></span></button>
 </div>
 
 <div id="full">
@@ -801,7 +882,7 @@ h2{font-weight:800;font-size:24px}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
     </button>
     <div class="f-label">Spielt gerade</div>
-    <span></span>
+    <button id="f-more" aria-label="Mehr"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg></button>
   </div>
   <div id="full-body">
     <div class="full-art"><img id="f-img" alt=""></div>
@@ -825,10 +906,12 @@ h2{font-weight:800;font-size:24px}
       <button id="f-rp" title="Wiederholen"></button>
     </div>
     <div class="full-extras">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3z"/></svg>
+      <svg class="vi" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3z"/></svg>
       <input type="range" id="f-vol" min="0" max="1" step="0.01" aria-label="Lautstärke">
+      <button class="ic" id="f-share" title="Teilen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/></svg></button>
       <button class="ic" id="f-q" title="Warteschlange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="13" y2="18"/><circle cx="19" cy="18" r="2.5"/></svg></button>
     </div>
+    <button id="f-next" type="button"></button>
   </div>
 </div>
 
@@ -863,6 +946,22 @@ const api=async(p,q)=>{
   if(r.status===401){const k=prompt('Zugriffscode:');if(k){sessionStorage.setItem('key',k);return api(p,q)}}
   const d=await r.json().catch(()=>({error:'Ungültige Antwort'}));if(!r.ok)throw new Error(d.error||'Fehler');return d};
 const TR={}, LISTS={};
+const mtop=$('#mtop');
+I.addc='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 7.5v9M7.5 12h9"/></svg>';
+I.checkc='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="currentColor"/><path d="M7.5 12.3l3 3 6-6.3" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const PIN='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.5 2l7.5 7.5-2.5.5-3.5 3.5.5 4-1.5 1.5-4-4-5.5 5.5-1-1L9.5 13.5l-4-4L7 8l4 .5L14.5 5z"/></svg>';
+const AVI='<span class="av"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg></span>';
+const mic=(d,a)=>`<button class="mic" ${a}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg></button>`;
+function setTop(p){
+  let h;
+  if(!p[0]||p[0]==='home'){const g=p[1]||'all-music',k=p[2]||'trending';h=AVI+`<div class="mchips">${GEN.map(([id,l])=>`<a class="chip${g===id?' on':''}" href="#/home/${id}/${k}">${l}</a>`).join('')}</div>`}
+  else if(p[0]==='find')h=AVI+'<h1>Suche</h1>'+mic('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>','data-act="pastelink" aria-label="Link einfügen"');
+  else if(p[0]==='library'&&p[1]!=='likes')h=AVI+'<h1>Bibliothek</h1>'+mic('<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>','data-act="gofind" aria-label="Suchen"')+mic('<path d="M12 5v14M5 12h14"/>','data-act="newlist" aria-label="Neue Playlist"');
+  else h=mic('<path d="M15 18l-6-6 6-6"/>','data-act="goback" aria-label="Zurück"');
+  mtop.innerHTML=h;
+  const on=mtop.querySelector('.chip.on');if(on)mtop.querySelector('.mchips').scrollLeft=Math.max(0,on.offsetLeft-60);
+}
+const closeSheet=()=>document.body.classList.remove('sheet-open');
 const slim=t=>({id:t.id,title:t.title,permalinkUrl:t.permalinkUrl,duration:t.duration,artworkUrl:t.artworkUrl,artist:t.artist?{id:t.artist.id,username:t.artist.username,profileUrl:t.artist.profileUrl}:null,stats:{plays:t.stats?.plays}});
 const reg=l=>l.filter(Boolean).map(t=>(TR[t.id]=Object.assign(TR[t.id]||{},t)));
 const liked=id=>S.likes.some(t=>t.id==id);
@@ -891,16 +990,16 @@ const load=async(el,fn)=>{el.innerHTML='<div class="msg">Lade…</div>';try{el.i
 const GEN=[['all-music','Alle'],['hiphoprap','Hip-Hop'],['electronic','Electronic'],['pop','Pop'],['danceedm','Dance & EDM'],['house','House'],['techno','Techno'],['trap','Trap'],['rbsoul','R&B'],['ambient','Ambient']];
 async function vHome(g='all-music',kind='trending'){
   let h='';
-  {const hr=new Date().getHours();h+=`<h2 style="margin-top:8px">${hr<5||hr>=18?'Guten Abend':hr<11?'Guten Morgen':'Guten Tag'}</h2>`;if(S.hist.length){const hl=reg(S.hist.slice(0,8));LISTS.hist=hl;h+=`<div class="tiles">${hl.map((t,i)=>`<div class="tile" data-k="hist" data-i="${i}" data-id="${t.id}">${img(t.artworkUrl)}<span>${esc(t.title)}</span></div>`).join('')}</div>`}}
+  {const hr=new Date().getHours();h+=`<h2 class="greet dsk" style="margin-top:8px">${hr<5||hr>=18?'Guten Abend':hr<11?'Guten Morgen':'Guten Tag'}</h2>`;if(S.hist.length){const hl=reg(S.hist.slice(0,8));LISTS.hist=hl;h+=`<div class="tiles">${hl.map((t,i)=>`<div class="tile" data-k="hist" data-i="${i}" data-id="${t.id}">${img(t.artworkUrl)}<span>${esc(t.title)}</span></div>`).join('')}</div>`}}
   h+=`<h2>Charts</h2><div class="chips">${[['trending','Trending'],['top','Top 30']].map(([k,l])=>`<a class="chip${kind===k?' on':''}" href="#/home/${g}/${k}">${l}</a>`).join('')}</div>
-  <div class="chips">${GEN.map(([k,l])=>`<a class="chip${g===k?' on':''}" href="#/home/${k}/${kind}">${l}</a>`).join('')}</div><div id="ch"></div>`;
+  <div class="chips dsk">${GEN.map(([k,l])=>`<a class="chip${g===k?' on':''}" href="#/home/${k}/${kind}">${l}</a>`).join('')}</div><div id="ch"></div>`;
   view.innerHTML=h;
   load($('#ch'),async()=>{const l=await api('explore',{type:'trending',genre:g,kind});return playBtns('ch').replace('class="btns"','class="btns" style="margin:0 0 12px"')+rows(l,'ch')});
 }
 const SB=v=>`<form id="sf2" class="sbox m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Was möchtest du hören?" value="${esc(v||'')}" enterkeyhint="search"></form>`;
 const GC=['#e13300','#1e3264','#8d67ab','#e8115b','#148a08','#ba5d07','#0d73ec','#503750','#477d95'];
 function vFind(){
-  view.innerHTML=`<h2 style="margin-top:16px">Suche</h2>`+SB('').replace('sbox m','sbox')+`<div class="gh">Alle durchsuchen</div><div class="gtiles">${GEN.slice(1).map(([k,l],i)=>`<a href="#/search/${enc(l)}/tracks" style="background:${GC[i%GC.length]}">${esc(l)}</a>`).join('')}</div>`;
+  view.innerHTML=`<h2 class="dsk" style="margin-top:16px">Suche</h2>`+SB('').replace('sbox m','sbox')+`<div class="gh">Alle durchsuchen</div><div class="gtiles">${GEN.slice(1).map(([k,l],i)=>`<a href="#/search/${enc(l)}/tracks" style="background:${GC[i%GC.length]}">${esc(l)}</a>`).join('')}</div>`;
 }
 async function vSearch(q,tab='tracks'){
   view.innerHTML=SB(q)+`<h2>Ergebnisse für „${esc(q)}“</h2>`+tabs('search/'+enc(q),[['tracks','Tracks'],['playlists','Playlists'],['people','Profile']],tab)+'<div id="r"></div>';
@@ -942,13 +1041,17 @@ async function vTrack(url){
   ${t.description?`<p class="bio">${esc(t.description)}</p>`:''}<h2>Ähnliche Tracks</h2><div id="r"></div>`;
   load($('#r'),async()=>rows(await api('explore',{type:'related',id:t.id}),'rel'));
 }
-function vLibrary(tab='likes'){
-  const n=Object.keys(S.lists).length;
-  let h=`<h2>Deine Bibliothek</h2>`+tabs('library',[['likes','Likes'],['lists','Playlists'],['hist','Verlauf'],['follow','Folge ich']],tab);
-  if(tab==='likes')h+=S.likes.length?playBtns('lk')+rows(S.likes,'lk'):'<div class="msg">Tippe bei einem Track auf ♥, dann erscheint er hier.</div>';
-  if(tab==='lists')h+=`<div class="btns" style="margin:0 0 16px"><button class="btn" data-act="newlist">${I.plus}<span>Neue Playlist</span></button></div>`+(n?`<div class="grid">${Object.entries(S.lists).map(([k,l])=>`<a class="card" href="#/mylist/${enc(k)}"><div class="im">${img(l[0]?.artworkUrl)}</div><span class="t">${esc(k)}</span><span class="a">${l.length} Tracks</span></a>`).join('')}</div>`:'<div class="msg">Noch keine Playlists. Füge Tracks über ⋯ hinzu.</div>');
+function vLibrary(tab='lists'){
+  if(tab==='likes'){view.innerHTML=`<h2 style="margin-top:8px">Lieblingssongs</h2>`+(S.likes.length?playBtns('lk')+rows(S.likes,'lk'):'<div class="msg">Tippe bei einem Track auf +, dann erscheint er hier.</div>');return}
+  const ch=[['lists','Playlists'],['follow','Künstler*innen'],['hist','Verlauf']];
+  let h=`<div class="chips lch">${ch.map(([k,l])=>`<a class="chip${tab===k?' on':''}" href="#/library/${k}">${l}</a>`).join('')}</div>`;
+  if(tab==='lists'){
+    h+=`<div class="btns dsk" style="margin:0 0 12px"><button class="btn" data-act="newlist">${I.plus}<span>Neue Playlist</span></button></div>`;
+    h+=`<a class="lrow" href="#/library/likes"><div class="lart heart">${I.heart}</div><div class="lm"><b>Lieblingssongs</b><span>${PIN}Playlist • ${S.likes.length} Titel</span></div></a>`;
+    h+=Object.entries(S.lists).map(([k,l])=>`<a class="lrow" href="#/mylist/${enc(k)}"><div class="lart">${img(l[0]?.artworkUrl)}</div><div class="lm"><b>${esc(k)}</b><span>Playlist • ${l.length} Titel</span></div></a>`).join('');
+  }
   if(tab==='hist')h+=S.hist.length?`<div class="btns" style="margin:0 0 10px"><button class="btn g" data-act="clearhist">Verlauf löschen</button></div>`+rows(S.hist,'hi'):'<div class="msg">Noch nichts gehört.</div>';
-  if(tab==='follow')h+=S.follow.length?userCards(S.follow):'<div class="msg">Du folgst noch niemandem. Das Folgen wird nur lokal gespeichert.</div>';
+  if(tab==='follow')h+=S.follow.length?S.follow.map(u=>`<a class="lrow" href="#/profile/${enc(u.permalinkUrl)}"><div class="lart pr">${img(u.avatarUrl)}</div><div class="lm"><b>${esc(u.username)}</b><span>Künstler*in</span></div></a>`).join(''):'<div class="msg">Du folgst noch niemandem. Das Folgen wird nur lokal gespeichert.</div>';
   view.innerHTML=h;
 }
 function vMylist(name){
@@ -962,7 +1065,7 @@ function vMylist(name){
 /* ---------- Router ---------- */
 async function route(){
   const p=location.hash.replace(/^#\//,'').split('/').map(x=>{try{return decodeURIComponent(x)}catch{return x}});
-  view.dataset.list='';mainEl.scrollTop=0;
+  view.dataset.list='';mainEl.scrollTop=0;setTop(p);
   $('#n-home').classList.toggle('on',!p[0]||p[0]==='home');$('#n-lib').classList.toggle('on',p[0]==='library'||p[0]==='mylist');
   $('#t-home').classList.toggle('on',!p[0]||p[0]==='home');$('#t-find').classList.toggle('on',p[0]==='find'||p[0]==='search');$('#t-lib').classList.toggle('on',p[0]==='library'||p[0]==='mylist');
   try{
@@ -1014,22 +1117,22 @@ function drawTo(c){
   x.clearRect(0,0,w,h);
   const {acc,base}=colors();
   const p=au.duration?Math.min(1,au.currentTime/au.duration):0;
-  const hv=c.matches(':hover'), bh=4, by=(h-bh)/2;
+  const fp=c.id==='f-wv', hv=c.matches(':hover'), bh=4, by=(h-bh)/2;
   /* base track */
   x.fillStyle=base;
   if(x.roundRect){x.beginPath();x.roundRect(0,by,w,bh,bh/2);x.fill()}
   else x.fillRect(0,by,w,bh);
   /* progress */
-  if(p>0){
-    x.fillStyle=hv?acc:'#fff';
+  if(p>0||fp){
+    x.fillStyle=hv&&!fp?acc:'#fff';
     const pw=Math.max(bh,w*p);
     if(x.roundRect){x.beginPath();x.roundRect(0,by,pw,bh,bh/2);x.fill()}
     else x.fillRect(0,by,pw,bh);
     /* knob */
-    if(hv&&p<1){
+    if((hv||fp)&&p<1){
       x.fillStyle='#fff';
       x.beginPath();
-      x.arc(w*p,h/2,5,0,Math.PI*2);
+      x.arc(fp?Math.max(6,w*p):w*p,h/2,fp?6:5,0,Math.PI*2);
       x.fill();
     }
   }
@@ -1071,6 +1174,7 @@ function syncUI(){
   $('#rp').classList.toggle('on',S.rep>0);
   $('#rp').classList.toggle('one',S.rep===2);
   $('#nl').classList.toggle('liked',!!cur&&liked(cur.id));
+  $('#nl').innerHTML=cur&&liked(cur.id)?I.checkc:I.addc;
   document.querySelectorAll('[data-id]').forEach(e=>e.classList.toggle('on',!!cur&&e.dataset.id==cur.id&&e.classList.contains('tr')));
   if($('#qp').classList.contains('open'))renderQ();
   if($('#full').classList.contains('open'))syncFull();
@@ -1105,6 +1209,14 @@ addEventListener('keydown',e=>{if(/INPUT|TEXTAREA/.test(document.activeElement.t
   else if(e.key==='Escape'){$('#full').classList.remove('open')}});
 
 /* ---------- Full Player ---------- */
+const colCache={};
+function artColor(u){return new Promise(res=>{
+  if(!u)return res(null);if(colCache[u])return res(colCache[u]);
+  const im=new Image();im.crossOrigin='anonymous';
+  im.onload=()=>{try{const c=document.createElement('canvas');c.width=c.height=8;const x=c.getContext('2d');x.drawImage(im,0,0,8,8);const d=x.getImageData(0,0,8,8).data;
+    let r=0,g=0,b=0,n=0;for(let i=0;i<d.length;i+=4){const mx=Math.max(d[i],d[i+1],d[i+2]),mn=Math.min(d[i],d[i+1],d[i+2]),w=1+(mx-mn)/48;r+=d[i]*w;g+=d[i+1]*w;b+=d[i+2]*w;n+=w}
+    const k=.6;res(colCache[u]=`rgb(${r/n*k|0},${g/n*k|0},${b/n*k|0})`)}catch{res(null)}};
+  im.onerror=()=>res(null);im.src=u})}
 function openFull(){if(!cur)return toast('Nichts spielt');$('#full').classList.add('open');syncFull()}
 function closeFull(){$('#full').classList.remove('open')}
 function syncFull(){
@@ -1122,6 +1234,10 @@ function syncFull(){
   $('#f-rp').classList.toggle('on',S.rep>0);
   $('#f-rp').classList.toggle('one',S.rep===2);
   $('#f-like').classList.toggle('liked',liked(cur.id));
+  $('#f-like').innerHTML=liked(cur.id)?I.checkc:I.addc;
+  artColor(cur.artworkUrl).then(c=>$('#full').style.setProperty('--fc',c||'#0f6b1e'));
+  const nx=Q[qi+1],fn=$('#f-next');
+  if(nx){fn.className='on';fn.innerHTML=`${img(nx.artworkUrl)}<span class="tx"><span class="k">Als Nächstes</span><span class="v">${esc(nx.title)} · ${esc(nx.artist?.username||'')}</span></span>`}else{fn.className='';fn.innerHTML=''}
   $('#f-cu').textContent=tm(au.currentTime*1000);
   $('#f-du').textContent=tm((au.duration||cur.duration/1000||0)*1000);
   $('#f-vol').value=S.vol;
@@ -1174,7 +1290,11 @@ const ACT={
   shufall:b=>playQueue(LISTS[b.dataset.k]||[],0,true),
   follow:b=>{const p=JSON.parse(b.dataset.p);const f=S.follow.some(x=>x.id==p.id);S.follow=f?S.follow.filter(x=>x.id!=p.id):[p,...S.follow];save();b.classList.toggle('on',!f);b.textContent=f?'Folgen':'✓ Folge ich'},
   savelist:b=>{S.lists[b.dataset.name]=LISTS.pl.map(slim);save();toast('Gespeichert in der Bibliothek')},
-  newlist:()=>{const n=prompt('Name der Playlist:');if(n?.trim()){S.lists[n.trim()]=S.lists[n.trim()]||[];save();vLibrary('lists')}},
+  newlist:()=>{const n=prompt('Name der Playlist:');if(n?.trim()){S.lists[n.trim()]=S.lists[n.trim()]||[];save();location.hash==='#/library/lists'?vLibrary('lists'):location.hash='#/library/lists'}},
+  sheetnew:()=>{closeSheet();ACT.newlist()},
+  pastelink:()=>{closeSheet();const q=prompt('Link oder @Profil einfügen:');if(q)goSearch(q)},
+  gofind:()=>{location.hash='#/find'},
+  goback:()=>history.back(),
   renlist:b=>{const o=b.dataset.name,n=prompt('Neuer Name:',o)?.trim();if(n&&n!==o){S.lists[n]=S.lists[o];delete S.lists[o];save();location.hash='#/mylist/'+enc(n)}},
   dellist:b=>{if(confirm('Playlist „'+b.dataset.name+'“ löschen?')){delete S.lists[b.dataset.name];save();location.hash='#/library/lists'}},
   clearhist:()=>{S.hist=[];save();vLibrary('hist')},
@@ -1192,10 +1312,16 @@ document.addEventListener('click',e=>{
 
 /* ---------- Icons in statische Buttons einsetzen ---------- */
 $('#pv').innerHTML=I.prev;$('#pp').innerHTML=I.play;$('#nx').innerHTML=I.next;
-$('#sh').innerHTML=I.shuffle;$('#rp').innerHTML=I.repeat;$('#nl').innerHTML=I.heart;
+$('#sh').innerHTML=I.shuffle;$('#rp').innerHTML=I.repeat;$('#nl').innerHTML=I.addc;
 $('#f-pv').innerHTML=I.prev;$('#f-pp').innerHTML=I.play;$('#f-nx').innerHTML=I.next;
-$('#f-sh').innerHTML=I.shuffle;$('#f-rp').innerHTML=I.repeat;$('#f-like').innerHTML=I.heart;
+$('#f-sh').innerHTML=I.shuffle;$('#f-rp').innerHTML=I.repeat;$('#f-like').innerHTML=I.addc;
 
+$('#t-new').onclick=()=>document.body.classList.toggle('sheet-open');
+$('#scrim').onclick=closeSheet;
+addEventListener('hashchange',closeSheet);
+$('#f-share').onclick=async()=>{if(!cur)return;try{if(navigator.share)await navigator.share({title:cur.title,url:cur.permalinkUrl});else{await navigator.clipboard.writeText(cur.permalinkUrl);toast('Link kopiert')}}catch{}};
+$('#f-more').onclick=e=>{if(!cur)return;const r=e.currentTarget.getBoundingClientRect();trackMenu(cur,Math.max(8,r.left-180),r.bottom)};
+$('#f-next').onclick=()=>{$('#qp').classList.add('open');renderQ()};
 route();syncUI();draw();
 </script>
 </body>
